@@ -1,0 +1,193 @@
+{
+  "info": {
+    "name": "MyChat API",
+    "description": "Complete API collection for MyChat Chat Application",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"fullName\\\": \\\"John Doe\\\",\\n  \\\"email\\\": \\\"john@example.com\\\",\\n  \\\"password\\\": \\\"password123\\\"\\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/signup",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"email\\\": \\\"john@example.com\\\",\\n  \\\"password\\\": \\\"password123\\\"\\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Check Auth Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/check",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "check"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"profilePic\\\": \\\"\\\"\\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/update-profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "update-profile"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Get All Contacts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/messages/contacts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "messages", "contacts"]
+            }
+          }
+        },
+        {
+          "name": "Get Chat Partners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/messages/chats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "messages", "chats"]
+            }
+          }
+        },
+        {
+          "name": "Get Messages with User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/messages/:userId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "messages", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "507f1f77bcf86cd799439011"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"text\\\": \\\"Hello there!\\\",\\n  \\\"image\\\": \\\"\\\"\\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/messages/send/:userId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "messages", "send", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "507f1f77bcf86cd799439011"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
