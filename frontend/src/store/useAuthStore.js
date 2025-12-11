@@ -17,12 +17,20 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
     try {
+      // Skip auth check if no token in production (cross-domain scenario)
+      const token = localStorage.getItem("jwt-token");
+      if (!token && import.meta.env.MODE !== "development") {
+        set({ authUser: null, isCheckingAuth: false });
+        return;
+      }
+      
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
       get().connectSocket();
     } catch (error) {
       console.log("Error in authCheck:", error);
       set({ authUser: null });
+      localStorage.removeItem("jwt-token"); // Clear invalid token
     } finally {
       set({ isCheckingAuth: false });
     }
