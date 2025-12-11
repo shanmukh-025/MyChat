@@ -33,6 +33,11 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
+      
+      // Store token for cross-domain auth
+      if (res.data.token) {
+        localStorage.setItem("jwt-token", res.data.token);
+      }
 
       toast.success("Account created successfully!");
       get().connectSocket();
@@ -48,6 +53,11 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
+      
+      // Store token for cross-domain auth
+      if (res.data.token) {
+        localStorage.setItem("jwt-token", res.data.token);
+      }
 
       toast.success("Logged in successfully");
 
@@ -63,6 +73,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
+      localStorage.removeItem("jwt-token"); // Clear token on logout
       toast.success("Logged out successfully");
       get().disconnectSocket();
     } catch (error) {
