@@ -86,6 +86,13 @@ export const useAuthStore = create((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
+    // Temporarily disable Socket.io in production due to cross-domain auth issues
+    // REST API works fine for all functionality
+    if (import.meta.env.MODE !== "development") {
+      console.log("Socket.io disabled in production - using REST API only");
+      return;
+    }
+
     const socket = io(BASE_URL, {
       withCredentials: true,
       reconnectionDelay: 1000,
