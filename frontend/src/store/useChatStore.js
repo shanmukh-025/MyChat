@@ -92,6 +92,12 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
+    
+    // Socket.io might not be connected yet in production
+    if (!socket) {
+      console.log("Socket not connected - messages will be received via polling");
+      return;
+    }
 
     socket.on("newMessage", (newMessage) => {
       const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
@@ -111,6 +117,8 @@ export const useChatStore = create((set, get) => ({
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
-    socket.off("newMessage");
+    if (socket) {
+      socket.off("newMessage");
+    }
   },
 }));

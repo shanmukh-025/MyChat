@@ -119,16 +119,19 @@ export const useAuthStore = create((set, get) => ({
       },
     });
 
-    // Handle Socket.io specific errors - don't show them to user
-    // The app works fine with REST API even if Socket.io fails
+    // Handle Socket.io events
+    socket.on("connect", () => {
+      console.log("✅ Socket.io connected successfully");
+    });
+    
     socket.on("connect_error", (error) => {
-      console.log("Socket connection error:", error.message);
-      // Don't show error toast for Socket.io - REST API will still work
+      console.log("❌ Socket connection error:", error.message);
+      // Don't show error toast - REST API will still work
     });
 
     socket.on("error", (error) => {
-      console.log("Socket error:", error);
-      // Don't show error toast for Socket.io - REST API will still work
+      console.log("❌ Socket error:", error);
+      // Don't show error toast - REST API will still work
     });
 
     socket.connect();
