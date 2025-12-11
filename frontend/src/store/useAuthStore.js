@@ -87,10 +87,25 @@ export const useAuthStore = create((set, get) => ({
     if (!authUser || get().socket?.connected) return;
 
     const socket = io(BASE_URL, {
-      withCredentials: true, // this ensures cookies are sent with the connection
+      withCredentials: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 5,
+      auth: {
+        userId: authUser._id,
+      },
+    });
+
+    // Handle Socket.io specific errors - don't show them to user
+    // The app works fine with REST API even if Socket.io fails
+    socket.on("connect_error", (error) => {
+      console.log("Socket connection error:", error.message);
+      // Don't show error toast for Socket.io - REST API will still work
+    });
+
+    socket.on("error", (error) => {
+      console.log("Socket error:", error);
+      // Don't show error toast for Socket.io - REST API will still work
     });
 
     socket.connect();

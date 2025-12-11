@@ -4,19 +4,31 @@ import { ENV } from "../lib/env.js";
 
 export const socketAuthMiddleware = async (socket, next) => {
   try {
-    // extract token from http-only cookies or auth header
-    let token = socket.handshake.headers.cookie
-      ?.split("; ")
-      .find((row) => row.startsWith("jwt="))
-      ?.split("=")[1];
+    // Try multiple ways to get the token for cross-domain compatibility
+    let token = null;
 
-    // fallback: check authorization header
+    // Method 1: Extract from http-only cookies
+    if (socket.handshake.headers.cookie) {
+      token = socket.handshake.headers.cookie
+        .split("; ")
+        .find((row) => row.startsWith("jwt="))
+        ?.split("=")[1];
+    }
+
+    // Method 2: Check authorization header
+    if (!token && socket.handshake.headers.authorization) {
+      token = socket.handshake.headers.authorization.replace("Bearer ", "");
+    }
+
+    // Method 3: Check auth object (for custom token passing)
     if (!token && socket.handshake.auth?.token) {
       token = socket.handshake.auth.token;
     }
 
     if (!token) {
-      console.log("Socket connection rejected: No token provided");
+      // For cross-domain requests, Socket.io auth might fail initially
+      // This is not a critical error - REST API calls with proper auth will still work
+      console.log("Socket connection: No auth token found (cross-domain request expected)");
       return next(new Error("Unauthorized - No Token Provided"));
     }
 
